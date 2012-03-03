@@ -34,7 +34,10 @@ public class Camera extends Activity implements View.OnClickListener{
 		initializw();
 		InputStream is = null;
 		bmp = BitmapFactory.decodeStream(is);
-		
+		takePhoto();
+	}
+	
+	private void takePhoto() {
 		i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 		startActivityForResult(i, cameraData);
 	}
@@ -81,5 +84,7 @@ public class Camera extends Activity implements View.OnClickListener{
 			bmp = (Bitmap) extras.get("data");
 			iv.setImageBitmap(bmp);
 		}
+		else 
+			takePhoto();
 	}
 }

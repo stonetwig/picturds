@@ -27,7 +27,7 @@ public class Upload {
 	
 	public Upload(){}
 	
-	public void executeMultipartPost(File bm) throws Exception {
+	public void executeMultipartPost(Bitmap bmp) throws Exception {
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			byte[] data = bos.toByteArray();
