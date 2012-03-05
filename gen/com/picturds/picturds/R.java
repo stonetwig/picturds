@@ -15,9 +15,9 @@ public final class R {
     }
     public static final class id {
         public static final int bLogin=0x7f050004;
-        public static final int btnCancel=0x7f050009;
+        public static final int btnCancel=0x7f050007;
         public static final int btnSave=0x7f050008;
-        public static final int btnUpload=0x7f050007;
+        public static final int btnUpload=0x7f050009;
         public static final int iva=0x7f050006;
         public static final int lblPassword=0x7f050002;
         public static final int lblStatus=0x7f050005;
