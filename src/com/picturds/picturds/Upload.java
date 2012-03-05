@@ -11,6 +11,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
  
@@ -27,32 +28,23 @@ public class Upload {
 	
 	public Upload(){}
 	
-	public void executeMultipartPost(Bitmap bmp) throws Exception {
-		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			byte[] data = bos.toByteArray();
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost postRequest = new HttpPost(
-					"http://picturds.com/upload.php");
-			ByteArrayBody bab = new ByteArrayBody(data, "test.jpg");
-			// File file= new File("/mnt/sdcard/forest.png");
-			// FileBody bin = new FileBody(file);
-			MultipartEntity reqEntity = new MultipartEntity(
-					HttpMultipartMode.BROWSER_COMPATIBLE);
-			reqEntity.addPart("file", bab);
-			postRequest.setEntity(reqEntity);
-			HttpResponse response = httpClient.execute(postRequest);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent(), "UTF-8"));
-			String sResponse;
-			StringBuilder s = new StringBuilder();
-			while ((sResponse = reader.readLine()) != null) {
-				s = s.append(sResponse);
-			}
-			System.out.println("Response: " + s);
-			} catch (Exception e) {
-				// handle exception here
-				Log.e(e.getClass().getName(), e.getMessage());
-			}
+	public void executeMultipartPost(File bmp, String filename) throws Exception {
+		String tag = "postFunction";
+
+	    HttpClient httpclient = new DefaultHttpClient();
+	    HttpPost httppost = new HttpPost("http://picturds.com/upload.php");
+
+	    try {
+	        MultipartEntity entity = new MultipartEntity();
+
+	        entity.addPart("file", new FileBody(bmp));
+	        httppost.setEntity(entity);
+	        HttpResponse response = httpclient.execute(httppost);
+	        Log.i(tag, "picture was uploaded " + response.toString());
+
+	    } catch (Exception e) {
+			// handle exception here
+			Log.e(e.getClass().getName(), e.getMessage());
 		}
+	}
 }

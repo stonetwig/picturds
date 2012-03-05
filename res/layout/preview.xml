@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
     <ImageView
@@ -9,26 +9,33 @@
         android:layout_width="266dp"
         android:layout_height="250dp"
         android:layout_gravity="center"
-        android:layout_weight="0.63"
         android:contentDescription="iva"
+        android:layout_x="25dp"
+        android:layout_y="10dp"
         android:src="@drawable/icon" />
-
+
     <Button
-        android:id="@+id/btnUpload"
-        android:layout_width="100dp"
+        android:id="@+id/btnCancel"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Upload" />
+        android:layout_x="57dp"
+        android:layout_y="320dp"
+        android:text="Cancel" />
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_x="157dp"
+        android:layout_y="272dp"
         android:text="Save" />
-    
-    <Button
-        android:id="@+id/btnCancel"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="Cancel" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/btnUpload"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_x="57dp"
+        android:layout_y="272dp"
+        android:text="Upload" />
+
+</AbsoluteLayout>
