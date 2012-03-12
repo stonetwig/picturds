@@ -77,9 +77,9 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 			});
 
 			// We use FileBody to transfer an image
-			multipartContent.addPart("file", new FileBody(new File(filename), filename, "jpg", "utf-8" ));
+			multipartContent.addPart("userfile", new FileBody(new File(filename), filename, "image/jpeg", "utf-8" ));
 			totalSize = multipartContent.getContentLength();
-			multipartContent.addPart("email", new StringBody("ande_thuresson@hotmail.com"));
+			multipartContent.addPart("email", new StringBody("haha@kvinnligarattigheter.nu"));
 			multipartContent.addPart("upload", new StringBody("Upload"));
 
 			// Send it
