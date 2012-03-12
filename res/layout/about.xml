@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/lblAboutTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="8dp"
+        android:layout_y="12dp"
+        android:text="About Picturds."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <TextView
+        android:id="@+id/lblAbout"
+        android:layout_width="266dp"
+        android:layout_height="166dp"
+        android:layout_x="8dp"
+        android:layout_y="64dp"
+        android:text="Picturds was created because of a school project. It's a project from the course &quot;Mobile IT&quot; at University West. The application will be a tool for storing pictures on a server as backup or sharing."
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
+        android:id="@+id/btnAboutBack"
+        android:layout_width="266dp"
+        android:layout_height="wrap_content"
+        android:layout_x="4dp"
+        android:layout_y="244dp"
+        android:text="Back" />
+
+</AbsoluteLayout>
