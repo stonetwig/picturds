@@ -45,7 +45,7 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 {
 	ProgressDialog pd;
 	long totalSize;
-	String filename;
+	String filename, email;
 	Activity ac;
 
 	@Override
@@ -77,9 +77,10 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 			});
 
 			// We use FileBody to transfer an image
-			multipartContent.addPart("file", new FileBody(new File(filename), filename, "jpg", "utf-8" ));
+			multipartContent.addPart("userfile", new FileBody(new File(filename), filename, "image/jpeg", "utf-8" ));
 			totalSize = multipartContent.getContentLength();
-			multipartContent.addPart("email", new StringBody("ande_thuresson@hotmail.com"));
+			//multipartContent.addPart("email", new StringBody(email));
+			multipartContent.addPart("email", new StringBody(email));
 			multipartContent.addPart("upload", new StringBody("Upload"));
 
 			// Send it
@@ -114,6 +115,10 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 	
 	public void setFilename(String name){
 		this.filename = name;
+	}
+	
+	public void setEmail(String mail){
+		this.email = mail;
 	}
 	
 	public void setActivity(Activity activity) {

@@ -3,6 +3,7 @@ package com.picturds.picturds;
 import java.io.InputStream;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -11,22 +12,29 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import java.io.File;
 
 public class Camera extends Activity implements View.OnClickListener{
 	Button bUpload, bSave, bCancel, bEmail;
+	EditText tEmail;
+	
 	ImageView iv;
 	Intent i;
 	final static int cameraData = 0;
 	private static final String TAG = "log_tag";
 	Bitmap bmp;
-	String filename = "", path = "";
+	String filename, path;
 	File file = null;
 	ProgressDialog pd = null;
 	
@@ -39,32 +47,24 @@ public class Camera extends Activity implements View.OnClickListener{
 	private static final int EMAIL_MENU_ITEM = CREATOR_MENU_ITEM + 1;
 	private static final int OPTION2_MENU_ITEM = EMAIL_MENU_ITEM + 1;
 	
-	public static final String PREFS_NAME = "PicturdsEmail";
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		/*SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences settings = getPreferences(0);
 	    boolean status = settings.getBoolean("status", false);
 
 	    if(status==true){
 	    	setContentView(R.layout.preview);
 			takePhoto();
 			initializw();
-			InputStream is = null;
-			bmp = BitmapFactory.decodeStream(is);
+			EmailSession.setEmail(settings.getString("email", "null"));
+			EmailSession.setStatus(true);
 	    }
 	    else{
 	    	setContentView(R.layout.setemail);
 	    	initializz();
-	    }*/
-		
-		setContentView(R.layout.preview);
-		takePhoto();
-		initializw();
-		InputStream is = null;
-		bmp = BitmapFactory.decodeStream(is);
+	    }
 	}
 	
 	private void takePhoto() {
@@ -87,6 +87,7 @@ public class Camera extends Activity implements View.OnClickListener{
 	private void initializz() {
 		// TODO Auto-generated method stub
 		bEmail = (Button) findViewById (R.id.btnEmail);
+		tEmail = (EditText) findViewById (R.id.txtEmail);
 		bEmail.setOnClickListener(this);
 	}
 
@@ -96,9 +97,12 @@ public class Camera extends Activity implements View.OnClickListener{
 			case R.id.btnUpload:
 				//Upload uploadPic = new Upload();
 				try {
+					updateEmail();
+					
 					Upload uploadPic = new Upload();
 					
 					uploadPic.setFilename(path);
+					uploadPic.setEmail(EmailSession.getEmail());
 					uploadPic.setActivity(Camera.this);
 					uploadPic.execute();
 	
@@ -114,13 +118,32 @@ public class Camera extends Activity implements View.OnClickListener{
 				takePhoto();
 				break;
 			case R.id.btnEmail:
-				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+				SharedPreferences settings = getPreferences(0);
 			    SharedPreferences.Editor editor = settings.edit();
 			    editor.putBoolean("status", true);
+			    editor.putString("email", tEmail.getText().toString());
+			    
+			    // Commit the edits!
+			    editor.commit();
+			    
+			    EmailSession.setEmail(tEmail.getText().toString());
+			    EmailSession.setStatus(true);
+			    
 			    setContentView(R.layout.preview);
 			    takePhoto();
+			    initializw();
 				break;
 		}
+	}
+	
+	private void updateEmail(){
+		SharedPreferences settings = getPreferences(0);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putBoolean("status", true);
+	    editor.putString("email", EmailSession.getEmail());
+	    
+	    // Commit the edits!
+	    editor.commit();
 	}
 	
 	@Override
@@ -165,7 +188,7 @@ public class Camera extends Activity implements View.OnClickListener{
         fileMenu.add(ABOUT, PICTURDS_MENU_ITEM, 0, "About Picturds");
         fileMenu.add(ABOUT, CREATOR_MENU_ITEM, 1, "Creators");
         editMenu.add(SETTINGS, EMAIL_MENU_ITEM, 0, "Change Email");
-        editMenu.add(SETTINGS, OPTION2_MENU_ITEM, 1, "Exit");
+        editMenu.add(SETTINGS, OPTION2_MENU_ITEM, 1, "Force Exit");
         return super.onCreateOptionsMenu(menu);
     }
 	
@@ -182,12 +205,21 @@ public class Camera extends Activity implements View.OnClickListener{
         	authorDialog.show();
             break;
         case EMAIL_MENU_ITEM:
-            //showMsg("General settings");
+        	EditEmail editDialog = new EditEmail(this,EmailSession.getEmail());
+        	editDialog.show();
             break;
         case OPTION2_MENU_ITEM:
-        	
+        	int pid = android.os.Process.myPid();
+        	android.os.Process.killProcess(pid); 
             break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    private void showMsg(String message) {
+        Toast msg = Toast.makeText(Camera.this, message, Toast.LENGTH_LONG);
+        msg.setGravity(Gravity.CENTER, msg.getXOffset() / 2,
+                msg.getYOffset() / 2);
+        msg.show();
     }
 }
