@@ -47,6 +47,8 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 	long totalSize;
 	String filename, email;
 	Activity ac;
+	private int update = 0;
+	private Camera camera;
 
 	@Override
 	protected void onPreExecute()
@@ -79,12 +81,9 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 			// We use FileBody to transfer an image
 			multipartContent.addPart("userfile", new FileBody(new File(filename), filename, "image/jpeg", "utf-8" ));
 			totalSize = multipartContent.getContentLength();
-<<<<<<< HEAD
 			multipartContent.addPart("email", new StringBody("haha@kvinnligarattigheter.nu"));
-=======
 			//multipartContent.addPart("email", new StringBody(email));
 			multipartContent.addPart("email", new StringBody(email));
->>>>>>> anthuz/master
 			multipartContent.addPart("upload", new StringBody("Upload"));
 
 			// Send it
@@ -95,6 +94,9 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 			Log.i("SERVER", "UPLOADED: " + filename);
 			Log.i("SERVER", "Response: " + response.toString());
 			Log.i("SERVER", "Response: " + serverResponse);
+			
+			camera.responseFromServer(serverResponse);
+			
 			return serverResponse;
 		}
 
@@ -109,6 +111,9 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 	protected void onProgressUpdate(Integer... progress)
 	{
 		pd.setProgress((int) (progress[0]));
+		if(pd.getProgress() == 100) {
+			update = pd.getProgress();
+		}
 	}
 
 	@Override
@@ -127,5 +132,13 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 	
 	public void setActivity(Activity activity) {
 		this.ac = activity;
+	}
+	
+	public void setObject(Camera camera) {
+		this.camera = camera;
+	}
+	
+	public int getProgress() {
+		return update;
 	}
 }

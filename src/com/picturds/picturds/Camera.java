@@ -1,15 +1,18 @@
 package com.picturds.picturds;
 
-import java.io.InputStream;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,14 +23,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class Camera extends Activity implements View.OnClickListener{
 	Button bUpload, bSave, bCancel, bEmail;
 	EditText tEmail;
+	Upload uploadPic;
 	
 	ImageView iv;
 	Intent i;
@@ -37,6 +47,7 @@ public class Camera extends Activity implements View.OnClickListener{
 	String filename, path;
 	File file = null;
 	ProgressDialog pd = null;
+	Uri uriPath;
 	
 	private static final int ABOUT = 0;
 	private static final int SETTINGS = 1;
@@ -46,6 +57,8 @@ public class Camera extends Activity implements View.OnClickListener{
 
 	private static final int EMAIL_MENU_ITEM = CREATOR_MENU_ITEM + 1;
 	private static final int OPTION2_MENU_ITEM = EMAIL_MENU_ITEM + 1;
+	private static final int CAPTURE_PIC = 0;
+ 
 	
 	
 	@Override
@@ -68,8 +81,90 @@ public class Camera extends Activity implements View.OnClickListener{
 	}
 	
 	private void takePhoto() {
+		
 		i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-		startActivityForResult(i, cameraData);
+		uriPath = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "file.jpg"));
+		Log.d("Camerainfo", Environment.getExternalStorageDirectory().toString());
+		//i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
+		i.putExtra("return-data", true);
+		i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uriPath);
+        startActivityForResult(i, 0);
+		
+		
+
+	}
+	
+	
+
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		if(resultCode == RESULT_OK) {
+			path = uriPath.toString();
+			file = new File(path);
+			String[] separated = path.split("/");
+			filename = separated[separated.length-1];
+			
+			bmp = loadBitmap(path);
+			iv.setImageBitmap(bmp);
+			
+			Log.d("image: ", path);
+			
+			
+		}
+		else 
+			takePhoto();
+	}
+	
+	/*@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	   
+	}*/
+	
+	
+	public Bitmap loadBitmap(String url)
+	{
+	    Bitmap bm = null;
+	    InputStream is = null;
+	    BufferedInputStream bis = null;
+	    try 
+	    {
+	        URLConnection conn = new URL(url).openConnection();
+	        conn.connect();
+	        is = conn.getInputStream();
+	        bis = new BufferedInputStream(is, 8192);
+	        bm = BitmapFactory.decodeStream(bis);
+	    }
+	    catch (Exception e) 
+	    {
+	        e.printStackTrace();
+	    }
+	    finally {
+	        if (bis != null) 
+	        {
+	            try 
+	            {
+	                bis.close();
+	            }
+	            catch (IOException e) 
+	            {
+	                e.printStackTrace();
+	            }
+	        }
+	        if (is != null) 
+	        {
+	            try 
+	            {
+	                is.close();
+	            }
+	            catch (IOException e) 
+	            {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	    return bm;
 	}
 
 
@@ -83,7 +178,7 @@ public class Camera extends Activity implements View.OnClickListener{
 		bSave.setOnClickListener(this);
 		bCancel.setOnClickListener(this);
 	}
-	
+
 	private void initializz() {
 		// TODO Auto-generated method stub
 		bEmail = (Button) findViewById (R.id.btnEmail);
@@ -99,11 +194,12 @@ public class Camera extends Activity implements View.OnClickListener{
 				try {
 					updateEmail();
 					
-					Upload uploadPic = new Upload();
+					uploadPic = new Upload();
 					
-					uploadPic.setFilename(path);
+					uploadPic.setFilename(path.substring(7));
 					uploadPic.setEmail(EmailSession.getEmail());
 					uploadPic.setActivity(Camera.this);
+					uploadPic.setObject(this);
 					uploadPic.execute();
 	
 				} catch (Exception e) {
@@ -145,25 +241,8 @@ public class Camera extends Activity implements View.OnClickListener{
 	    // Commit the edits!
 	    editor.commit();
 	}
+
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
-		if(resultCode == RESULT_OK) {
-			Bundle extras = data.getExtras();
-			path = getLastImagePath();
-			file = new File(path);
-			String[] separated = path.split("/");
-			filename = separated[separated.length-1];
-			bmp = (Bitmap) extras.get("data");
-			iv.setImageBitmap(bmp);
-			
-			
-		}
-		else 
-			takePhoto();
-	}
 	
 	private String getLastImagePath(){
 	    final String[] imageColumns = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
@@ -221,5 +300,11 @@ public class Camera extends Activity implements View.OnClickListener{
         msg.setGravity(Gravity.CENTER, msg.getXOffset() / 2,
                 msg.getYOffset() / 2);
         msg.show();
+    }
+    
+    public void responseFromServer(String url) {
+    	Looper.prepare();
+    	Response response = new Response(this, url);
+    	response.show();
     }
 }
