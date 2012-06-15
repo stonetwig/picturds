@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
@@ -8,34 +10,20 @@
         android:id="@+id/iva"
         android:layout_width="320dp"
         android:layout_height="340dp"
-        android:layout_gravity="center"
-        android:contentDescription="iva"
-        android:layout_x="0dp"
         android:layout_y="0dp"
-        android:src="@drawable/icon" />
-
-    <Button
-        android:id="@+id/btnCancel"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_x="57dp"
-        android:layout_y="400dp"
-        android:text="New Photo" />
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_x="157dp"
-        android:layout_y="352dp"
-        android:text="Save" />
+        android:contentDescription="iva"
+        android:src="@drawable/icon"
+        android:top="0dp" />
 
     <Button
         android:id="@+id/btnUpload"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_x="57dp"
-        android:layout_y="352dp"
-        android:text="Upload" />
+        android:layout_alignParentRight="true"
+        android:text="Upload"
+        android:visibility="gone" />
+
+ 
 
-</AbsoluteLayout>
+</RelativeLayout>
+

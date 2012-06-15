@@ -1,25 +1,10 @@
 package com.picturds.picturds;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
-import org.apache.http.HttpEntity;
+import java.io.File;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -31,14 +16,8 @@ import com.picturds.picturds.CustomMultiPartEntity.ProgressListener;
  
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 
 public class Upload extends AsyncTask<HttpResponse, Integer, String>
@@ -49,13 +28,14 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 	Activity ac;
 	private int update = 0;
 	private Camera camera;
+	String serverResponse = null;
 
 	@Override
 	protected void onPreExecute()
 	{
 		pd = new ProgressDialog(ac);
 		pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		pd.setMessage("Uploading Picture...");
+		pd.setMessage("Uploading picture...");
 		pd.setCancelable(false);
 		pd.show();
 	}
@@ -81,7 +61,7 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 			// We use FileBody to transfer an image
 			multipartContent.addPart("userfile", new FileBody(new File(filename), filename, "image/jpeg", "utf-8" ));
 			totalSize = multipartContent.getContentLength();
-			multipartContent.addPart("email", new StringBody("haha@kvinnligarattigheter.nu"));
+			//multipartContent.addPart("email", new StringBody("haha@kvinnligarattigheter.nu"));
 			//multipartContent.addPart("email", new StringBody(email));
 			multipartContent.addPart("email", new StringBody(email));
 			multipartContent.addPart("upload", new StringBody("Upload"));
@@ -89,14 +69,12 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 			// Send it
 			httpPost.setEntity(multipartContent);
 			HttpResponse response = httpClient.execute(httpPost, httpContext);
-			String serverResponse = EntityUtils.toString(response.getEntity());
+			serverResponse = EntityUtils.toString(response.getEntity());
 			
 			Log.i("SERVER", "UPLOADED: " + filename);
 			Log.i("SERVER", "Response: " + response.toString());
 			Log.i("SERVER", "Response: " + serverResponse);
-			
-			camera.responseFromServer(serverResponse);
-			
+
 			return serverResponse;
 		}
 
@@ -106,20 +84,25 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 		}
 		return null;
 	}
-
+	
+	
 	@Override
 	protected void onProgressUpdate(Integer... progress)
 	{
-		pd.setProgress((int) (progress[0]));
-		if(pd.getProgress() == 100) {
-			update = pd.getProgress();
+		pd.setProgress((int) progress[0]);
+		setProgress((int) progress[0]);
+		if(getProgress() == 100 && serverResponse != null) {
+			pd.dismiss();
+			Log.d("Done:", "response is not null!");
 		}
 	}
+
 
 	@Override
 	protected void onPostExecute(String ui)
 	{
 		pd.dismiss();
+		camera.responseFromServer(trimQuotes(serverResponse));
 	}
 	
 	public void setFilename(String name){
@@ -140,5 +123,20 @@ public class Upload extends AsyncTask<HttpResponse, Integer, String>
 	
 	public int getProgress() {
 		return update;
+	}
+	
+	public void setProgress(int progress) {
+		update = progress;
+	}
+	
+	public static String trimQuotes( String value ) {
+		if ( value == null )
+	      return value;
+	
+	    value = value.trim( );
+	    if ( value.startsWith( "\"" ) && value.endsWith( "\"" ) )
+	      return value.substring( 1, value.length( ) - 1 );
+	    
+	    return value;
 	}
 }

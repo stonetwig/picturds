@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item android:id="@+id/menu_new_photo"
+    	  android:orderInCategory="1"
+          android:title="Photo"
+          android:icon="@drawable/ic_action_photo"
+          android:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/menu_upload"
+    	  android:orderInCategory="2"
+          android:title="Upload"
+          android:icon="@drawable/upload"
+          android:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/about_picturds"
+    	  android:orderInCategory="4"
+    	  android:title="About Picturds"
+          android:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/authors"
+    	  android:orderInCategory="5"
+    	  android:title="Authors"
+          android:showAsAction="ifRoom|withText" />
+	<item android:id="@+id/change_email"
+    	  android:orderInCategory="6"
+    	  android:title="Change Email"
+          android:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/kill_app"
+    	  android:orderInCategory="7"
+    	  android:title="Kill application"
+          android:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/menu_save_photo"
+    	  android:orderInCategory="3"
+          android:title="Save Photo"
+          android:showAsAction="ifRoom|withText" />
+
+</menu>

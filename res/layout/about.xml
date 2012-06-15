@@ -18,7 +18,7 @@
         android:layout_height="166dp"
         android:layout_x="8dp"
         android:layout_y="64dp"
-        android:text="Picturds was created because of a school project. It's a project from the course &quot;Mobile IT&quot; at University West. The application will be a tool for storing pictures on a server as backup or sharing."
+        android:text="Picturds was created as a school project. It's a project from the course &quot;Mobile IT&quot; at University West. The application will be a tool for storing pictures on a server as backup or fast sharing."
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
