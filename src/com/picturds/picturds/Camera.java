@@ -282,14 +282,14 @@ public class Camera extends Activity implements View.OnClickListener{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.about_picturds:
+        /*case R.id.about_picturds:
         	About aboutDialog = new About(this);
         	aboutDialog.show();
             break;
         case R.id.authors:
         	Author authorDialog = new Author(this);
         	authorDialog.show();
-            break;
+            break;*/
         case R.id.change_email:
         	EditEmail editDialog = new EditEmail(this,EmailSession.getEmail());
         	editDialog.show();

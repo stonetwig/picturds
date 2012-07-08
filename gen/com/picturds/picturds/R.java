@@ -19,18 +19,16 @@ public final class R {
         public static final int upload=0x7f020005;
     }
     public static final class id {
-        public static final int about_picturds=0x7f060018;
-        public static final int authors=0x7f060019;
         public static final int bLogin=0x7f06000e;
         public static final int backgroundLayout=0x7f060009;
         public static final int btnAboutBack=0x7f060002;
         public static final int btnAuthorBack=0x7f060008;
         public static final int btnEmail=0x7f060015;
         public static final int btnUpload=0x7f060010;
-        public static final int change_email=0x7f06001a;
+        public static final int change_email=0x7f060018;
         public static final int cpandclose=0x7f060012;
         public static final int iva=0x7f06000f;
-        public static final int kill_app=0x7f06001b;
+        public static final int kill_app=0x7f060019;
         public static final int lblAbout=0x7f060001;
         public static final int lblAboutTitle=0x7f060000;
         public static final int lblAuthor=0x7f060004;
@@ -41,7 +39,7 @@ public final class R {
         public static final int lblPassword=0x7f06000c;
         public static final int lblUsername=0x7f06000a;
         public static final int menu_new_photo=0x7f060016;
-        public static final int menu_save_photo=0x7f06001c;
+        public static final int menu_save_photo=0x7f06001a;
         public static final int menu_upload=0x7f060017;
         public static final int resposeurl=0x7f060011;
         public static final int textView1=0x7f060013;
