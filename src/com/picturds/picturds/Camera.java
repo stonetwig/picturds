@@ -129,7 +129,7 @@ public class Camera extends Activity implements View.OnClickListener{
 			Log.d("image: ", path);
 			
 			//upload photo directly
-			onClick(bUpload);
+			upload();
 			
 		}
 		
@@ -201,27 +201,27 @@ public class Camera extends Activity implements View.OnClickListener{
 		tEmail = (EditText) findViewById (R.id.txtEmail);
 		bEmail.setOnClickListener(this);
 	}
+	
+	private void upload() {
+		try {
+			updateEmail();
+			
+			uploadPic = new Upload();
+			
+			uploadPic.setFilename(path.substring(7));
+			uploadPic.setEmail(EmailSession.getEmail());
+			uploadPic.setActivity(Camera.this);
+			uploadPic.setObject(this);
+			uploadPic.execute();
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void onClick(View v) {
 		switch(v.getId()) {
-			case R.id.btnUpload:
-				//Upload uploadPic = new Upload();
-				try {
-					updateEmail();
-					
-					uploadPic = new Upload();
-					
-					uploadPic.setFilename(path.substring(7));
-					uploadPic.setEmail(EmailSession.getEmail());
-					uploadPic.setActivity(Camera.this);
-					uploadPic.setObject(this);
-					uploadPic.execute();
-	
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				break;
 			case R.id.menu_save_photo:
 				if(storage > 0) {
 					ClipboardManager ClipMan = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -306,7 +306,7 @@ public class Camera extends Activity implements View.OnClickListener{
         	takePhoto();
         	break;
         case R.id.menu_upload:
-        	onClick(bUpload);
+        	upload();
         	break;
         	
         }
